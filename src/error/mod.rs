@@ -1,4 +1,4 @@
-// File: src/error/mod.rs
+/// File: src/error/mod.rs
 
 /// This module contains all error types and error handling logic for internal
 /// logger failures. When the logger itself encounters problems (disk full,
@@ -20,14 +20,14 @@ mod types;
 ///
 /// This function handles errors that occur within the FreedomLogger itself.
 /// It writes to 'logger_errors.log' in the same directory as the main log file.
-/// If this function itself fails (e.g., can't create error log), it silently fails.
+/// If this function itself fails (e.g., can't create an error log), it silently fails.
 ///
 /// # Arguments
 /// * `error` - The LoggerError to write to the error log
 /// * `log_directory` - Directory where the main log file is located
 
 pub fn write_error_to_log(error: &LoggerError, log_directory: &Path) {
-    // Create error log path in same directory as main log
+    // Create an error log path in the same directory as the main log
     let error_log_path = log_directory.join("logger_errors.log");
 
     /*
