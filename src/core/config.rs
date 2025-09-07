@@ -80,6 +80,18 @@ impl Pattern {
         // Other placeholders like {timestamp}, {level} are optional
         pattern.contains("{message}")
         }
+
+    pub fn format(&self, info: &crate::format::LogInfo) -> String {
+        use crate::format::{format_basic, format_detailed};
+
+        match self {
+            Pattern::Basic => format_basic(info),
+            Pattern::Detailed => format_detailed(info),
+            Pattern::Extended => format_detailed(info),
+            Pattern::Json => format_basic(info),
+            Pattern::Custom(_) => format_basic(info),
+        }
+    }
 }
 
 
