@@ -1,6 +1,7 @@
 mod error;
 mod core;
 mod format;
+mod rotation;
 
 pub fn add(left: u64, right: u64) -> u64 {
     left + right
