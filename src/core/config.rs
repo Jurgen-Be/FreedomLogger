@@ -36,6 +36,7 @@ impl LogLevel {
         }
     }
 
+
     /// Check if this level should be logged given the configured minimum level
     ///
     /// # Arguments
@@ -48,6 +49,7 @@ impl LogLevel {
         *self <= configured_level
     }
 }
+
 
 /// Log formatting patterns from basic to advanced
 /// Patterns determibe how log messages are formatted in the output file
@@ -80,6 +82,7 @@ impl Pattern {
         }
 }
 
+
 /// Complete logger configuration
 ///
 /// Contains all settings needed to initialize the logger.
@@ -109,6 +112,7 @@ pub struct LoggerConfig {
     pub max_backup_files: u32,
 }
 
+
 impl LoggerConfig {
     /// Create basic logger configuration (for logger::init)
     /// Uses default rotatiob settings: 10MB files, 5 backups
@@ -129,8 +133,61 @@ impl LoggerConfig {
         }
     }
 
+
     /// Create logger configuration with level filtering
     /// Uses default rotation settings: 10MB, 5 backups
+    pub fn with_level(
+        pattern: Pattern,
+        file_path: PathBuf,
+        file_name: String,
+        log_level: LogLevel,
+    ) -> Self {
+        Self {
+            pattern,
+            file_path,
+            file_name,
+            log_level: Some(log_level),
+            max_file_size: 10 * 1024 * 1024,
+            max_backup_files: 5,
+        }
+    }
 
 
+    /// Create full logger configuration (for logger::init_with_ratation)
+    /// All parameters customizable.
+
+    pub fn with_rotation(
+        pattern: Pattern,
+        file_path: PathBuf,
+        file_name: String,
+        log_level: LogLevel,
+        max_file_size: u64,
+        max_backup_files: u32,
+    ) -> Self {
+        Self {
+            pattern,
+            file_path,
+            file_name,
+            log_level: Some(log_level),
+            max_file_size,
+            max_backup_files,
+        }
+    }
+
+
+    /// Get a full path to the current log file
+    /// Example: /logs/app.log
+
+    pub fn get_log_file_path(&self) -> PathBuf {
+        self.file_path.join(format!("{}.log", self.file_name))
+    }
+
+    /// Check if a loglevel should be written based on configuration
+
+    pub fn should_log_level(&self, level: LogLevel) -> bool {
+        match self.log_level {
+            Some(configured_level) => level.should_log(configured_level),
+            None => true,
+        }
+    }
 }
