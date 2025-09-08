@@ -1,4 +1,4 @@
-use FreedomLogger::{init_with_level, info, warning, error, Pattern, LogLevel};
+use FreedomLogger::{init_with_level, info, warning, error, Pattern, LogLevel, Logger};
 
 fn main() {
     // Detailed pattern met file:line info
