@@ -38,7 +38,9 @@ fn main() {
 ## Installation
 
 ```bash
-cargo add FreedomLogger
+cargo add FreedomLogger --git https://github.com/Jurgen-Be/FreedomLogger
+
+
 ```
 
 ## Usage Examples
