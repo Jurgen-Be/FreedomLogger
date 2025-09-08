@@ -18,6 +18,8 @@ name = "FreedomLogger"
 path = "src/lib.rs"
 
 [dependencies]
+chrono = "0.4.41"
+
 # Dependencies will be added using: cargo add <crate_name>
 # This keeps the Cargo.toml clean and professional
 
