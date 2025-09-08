@@ -17,12 +17,12 @@ A professional, thread-safe logging library for Rust with automatic rotation, mu
 Add to your `Cargo.toml`:
 ```toml
 [dependencies]
-FreedomLogger = "1.0"
+freedom_logger = { git = "https://github.com/Jurgen-Be/FreedomLogger" }
 ```
 
 Basic usage:
 ```rust
-use FreedomLogger::{init, info, warning, error, Pattern};
+use freedom_logger::{init, info, warning, error, Pattern};
 
 fn main() {
     // Initialize logger once

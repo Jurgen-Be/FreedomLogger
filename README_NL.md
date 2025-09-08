@@ -17,7 +17,7 @@ Een professionele, thread-veilige logging bibliotheek voor Rust met automatische
 Voeg toe aan je `Cargo.toml`:
 ```toml
 [dependencies]
-FreedomLogger = "1.0"
+freedom_logger = { git = "https://github.com/Jurgen-Be/FreedomLogger" }
 ```
 
 Basis gebruik:

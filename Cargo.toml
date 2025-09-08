@@ -1,8 +1,38 @@
 [package]
 name = "FreedomLogger"
-version = "0.1.0"
-edition = "2024"
+version = "1.0.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "A professional, reusable logging library with pattern formatting, log rotation, and file management"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/yourusername/rust-logger"
+homepage = "https://github.com/yourusername/rust-logger"
+documentation = "https://docs.rs/rust-logger"
+readme = "README.md"
+keywords = ["logging", "log", "rotation", "patterns", "file"]
+categories = ["development-tools::debugging"]
+exclude = ["/.github/*", "/examples/*"]
+
+[lib]
+name = "FreedomLogger"
+path = "src/lib.rs"
 
 [dependencies]
-chrono = "0.4.41"
-tempfile = "3.21.0"
+# Dependencies will be added using: cargo add <crate_name>
+# This keeps the Cargo.toml clean and professional
+
+[dev-dependencies]
+# Dev dependencies will be added using: cargo add --dev <crate_name>
+
+[features]
+default = []
+json-format = []        # JSON formatting using std::fmt
+database-ready = []     # For future v2 database logging
+
+[[example]]
+name = "basic_usage"
+path = "examples/basic_usage.rs"
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
