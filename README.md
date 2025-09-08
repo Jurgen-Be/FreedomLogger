@@ -17,7 +17,7 @@ A professional, thread-safe logging library for Rust with automatic rotation, mu
 Add to your `Cargo.toml`:
 ```toml
 [dependencies]
-freedom_logger = { git = "https://github.com/Jurgen-Be/FreedomLogger" }
+freedom_logger
 ```
 
 Basic usage:
@@ -38,7 +38,7 @@ fn main() {
 ## Installation
 
 ```bash
-cargo add FreedomLogger --git https://github.com/Jurgen-Be/FreedomLogger
+cargo add FreedomLogger
 
 
 ```

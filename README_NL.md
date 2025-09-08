@@ -17,7 +17,7 @@ Een professionele, thread-veilige logging bibliotheek voor Rust met automatische
 Voeg toe aan je `Cargo.toml`:
 ```toml
 [dependencies]
-freedom_logger = { git = "https://github.com/Jurgen-Be/FreedomLogger" }
+freedom_logger 
 ```
 
 Basis gebruik:
@@ -38,7 +38,7 @@ fn main() {
 ## Installatie
 
 ```bash
-cargo add FreedomLogger --git https://github.com/Jurgen-Be/FreedomLogger
+cargo add FreedomLogger
 ```
 
 ## Gebruik Voorbeelden
