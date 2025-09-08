@@ -241,8 +241,8 @@ Zie [CHANGELOG] voor gedetailleerde versie geschiedenis.
 
 ## Ondersteuning
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/FreedomLogger/issues)
-- **Discussies**: [GitHub Discussions](https://github.com/yourusername/FreedomLogger/discussions)
+- **Issues**: [GitHub Issues](https://github.com/Jurgen-Be/FreedomLogger/issues)
+- **Discussies**: [GitHub Discussions](https://github.com/Jurgen-Be/FreedomLogger/discussions)
 - **Documentatie**: [docs.rs/FreedomLogger](https://docs.rs/FreedomLogger)
 
 ---

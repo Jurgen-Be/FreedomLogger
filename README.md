@@ -243,8 +243,8 @@ See [CHANGELOG] for detailed version history.
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/FreedomLogger/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/FreedomLogger/discussions)
+- **Issues**: [GitHub Issues](https://github.com/Jurgen-Be/FreedomLogger/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Jurgen-Be/FreedomLogger/discussions)
 - **Documentation**: [docs.rs/FreedomLogger](https://docs.rs/FreedomLogger)
 
 ---
