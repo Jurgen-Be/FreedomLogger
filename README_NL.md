@@ -231,15 +231,12 @@ Bijdragen zijn welkom! Zie [CONTRIBUTING.md](CONTRIBUTING.md) voor richtlijnen.
 
 ## Licentie
 
-Gelicenseerd onder een van beide:
-- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE))
-- MIT License ([LICENSE-MIT](LICENSE-MIT))
-
-naar jouw keuze.
+Gelicenseerd onder:
+- MIT License
 
 ## Changelog
 
-Zie [CHANGELOG.md](CHANGELOG.md) voor gedetailleerde versie geschiedenis.
+Zie [CHANGELOG] voor gedetailleerde versie geschiedenis.
 
 ## Ondersteuning
 
