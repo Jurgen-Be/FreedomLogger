@@ -47,10 +47,10 @@ static INIT_ONCE: Once = Once::new();
 ///
 /// # Panics
 /// Panics if called more than once or if initialization fails
-pub fn init<P: AsRef<Path>>(pattern: Pattern, file_path: P, file_name: &str) {
+pub fn log_init<P: AsRef<Path>>(pattern: Pattern, file_path: P, file_name: &str) {
     let path_buf = file_path.as_ref().to_path_buf();
     let config = LoggerConfig::basic(pattern, path_buf, file_name.to_string());
-    init_with_config(config);
+    log_init_with_config(config);
 }
 
 /// Initialize the global logger with log level filtering
@@ -66,7 +66,7 @@ pub fn init<P: AsRef<Path>>(pattern: Pattern, file_path: P, file_name: &str) {
 ///
 /// # Panics
 /// Panics if called more than once or if initialization fails
-pub fn init_with_level<P: AsRef<Path>>(
+pub fn log_init_with_level<P: AsRef<Path>>(
     pattern: Pattern,
     file_path: P,
     file_name: &str,
@@ -74,7 +74,7 @@ pub fn init_with_level<P: AsRef<Path>>(
 ) {
     let path_buf = file_path.as_ref().to_path_buf();
     let config = LoggerConfig::with_level(pattern, path_buf, file_name.to_string(), log_level);
-    init_with_config(config);
+    log_init_with_config(config);
 }
 
 /// Initialize the global logger with custom rotation settings
@@ -91,7 +91,7 @@ pub fn init_with_level<P: AsRef<Path>>(
 ///
 /// # Panics
 /// Panics if called more than once or if initialization fails
-pub fn init_with_rotation<P: AsRef<Path>>(
+pub fn log_init_with_rotation<P: AsRef<Path>>(
     pattern: Pattern,
     file_path: P,
     file_name: &str,
@@ -108,14 +108,14 @@ pub fn init_with_rotation<P: AsRef<Path>>(
         max_file_size,
         max_backup_files
     );
-    init_with_config(config);
+    log_init_with_config(config);
 }
 
 /// Initialize with a complete configuration object
 ///
 /// Internal method used by all public init functions.
 /// Ensures thread-safe single initialization.
-fn init_with_config(config: LoggerConfig) {
+fn log_init_with_config(config: LoggerConfig) {
     INIT_ONCE.call_once(|| {
         let logger = Logger::new(config);
         unsafe {
@@ -144,7 +144,7 @@ fn get_logger() -> &'static Arc<Logger> {
 ///
 /// # Arguments
 /// * `message` - The error message to log
-pub fn error(message: &str) {
+pub fn log_error(message: &str) {
     get_logger().error(message);
 }
 
@@ -155,7 +155,7 @@ pub fn error(message: &str) {
 ///
 /// # Arguments
 /// * `message` - The warning message to log
-pub fn warning(message: &str) {
+pub fn log_warning(message: &str) {
     get_logger().warning(message);
 }
 
@@ -166,7 +166,7 @@ pub fn warning(message: &str) {
 ///
 /// # Arguments
 /// * `message` - The info message to log
-pub fn info(message: &str) {
+pub fn log_info(message: &str) {
     get_logger().info(message);
 }
 
@@ -177,7 +177,7 @@ pub fn info(message: &str) {
 ///
 /// # Arguments
 /// * `message` - The debug message to log
-pub fn debug(message: &str) {
+pub fn log_debug(message: &str) {
     get_logger().debug(message);
 }
 
@@ -188,7 +188,7 @@ pub fn debug(message: &str) {
 ///
 /// # Arguments
 /// * `message` - The trace message to log
-pub fn trace(message: &str) {
+pub fn log_trace(message: &str) {
     get_logger().trace(message);
 }
 
@@ -203,12 +203,12 @@ mod tests {
         let temp_dir = tempdir().unwrap();
 
         // Initialize logger
-        init(Pattern::Basic, temp_dir.path(), "test");
+        log_init(Pattern::Basic, temp_dir.path(), "test");
 
         // Log some messages
-        info("Test info message");
-        warning("Test warning message");
-        error("Test error message");
+        log_info("Test info message");
+        log_warning("Test warning message");
+        log_error("Test error message");
 
         // Check that log file was created
         let log_file = temp_dir.path().join("test.log");

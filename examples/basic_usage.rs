@@ -1,17 +1,17 @@
-use FreedomLogger::{init_with_level, info, warning, error, Pattern, LogLevel, Logger};
+use FreedomLogger::{log_init_with_level, log_info, log_warning, log_error, Pattern, LogLevel, Logger};
 
 fn main() {
     // Detailed pattern met file:line info
-    FreedomLogger::init_with_level(
+    FreedomLogger::log_init_with_level(
         Pattern::Detailed,
         "./logs",
         "detailed_test",
         LogLevel::Debug
     );
 
-    info("This will show file and line number");
-    warning("Warning from main function");
-    error("Error with location info");
+    log_info("This will show file and line number");
+    log_warning("Warning from main function");
+    log_error("Error with location info");
 
     println!("Check ./logs/detailed_test.log");
 }

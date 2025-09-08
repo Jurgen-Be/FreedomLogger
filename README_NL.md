@@ -22,16 +22,16 @@ freedom_logger = { git = "https://github.com/Jurgen-Be/FreedomLogger" }
 
 Basis gebruik:
 ```rust
-use FreedomLogger::{init, info, warning, error, Pattern};
+use FreedomLogger::{log_init, log_info, log_warning, log_error, Pattern};
 
 fn main() {
     // Logger één keer initialiseren
     FreedomLogger::init(Pattern::Basic, "./logs", "mijnapp");
     
     // Overal in je applicatie loggen
-    info("Applicatie gestart");
-    warning("Dit is een waarschuwing");
-    error("Er ging iets mis");
+    log_info("Applicatie gestart");
+    log_warning("Dit is een waarschuwing");
+    log_error("Er ging iets mis");
 }
 ```
 
@@ -45,26 +45,26 @@ cargo add FreedomLogger --git https://github.com/Jurgen-Be/FreedomLogger
 
 ### Basis Initialisatie
 ```rust
-use FreedomLogger::{init, Pattern};
+use FreedomLogger::{log_init, Pattern};
 
 // Logt alle niveaus, 10MB bestanden, 5 backups
-init(Pattern::Basic, "/var/log/mijnapp", "applicatie");
+log_init(Pattern::Basic, "/var/log/mijnapp", "applicatie");
 ```
 
 ### Met Log Niveau Filtering
 ```rust
-use FreedomLogger::{init_with_level, Pattern, LogLevel};
+use FreedomLogger::{log_init_with_level, Pattern, LogLevel};
 
 // Log alleen WARNING en ERROR berichten
-init_with_level(Pattern::Detailed, "./logs", "app", LogLevel::Warning);
+log_init_with_level(Pattern::Detailed, "./logs", "app", LogLevel::Warning);
 ```
 
 ### Aangepaste Rotatie Instellingen
 ```rust
-use FreedomLogger::{init_with_rotation, Pattern, LogLevel};
+use FreedomLogger::{log_init_with_rotation, Pattern, LogLevel};
 
 // 50MB bestanden, bewaar 10 backups
-init_with_rotation(
+log_init_with_rotation(
     Pattern::Json,
     "./logs", 
     "service",
@@ -76,13 +76,13 @@ init_with_rotation(
 
 ### Logging Functies
 ```rust
-use FreedomLogger::{error, warning, info, debug, trace};
+use FreedomLogger::{log_error, log_warning, log_info, log_debug, log_trace};
 
-error("Kritieke systeemfout");
-warning("Gebruik van verouderde API gedetecteerd");  
-info("Gebruikersauthenticatie succesvol");
-debug("Verwerken van request payload");
-trace("Functie calculate_metrics betreden");
+log_error("Kritieke systeemfout");
+log_warning("Gebruik van verouderde API gedetecteerd");  
+log_info("Gebruikersauthenticatie succesvol");
+log_debug("Verwerken van request payload");
+log_trace("Functie calculate_metrics betreden");
 ```
 
 ## Output Patronen
@@ -132,15 +132,15 @@ FreedomLogger is volledig thread-veilig:
 
 ```rust
 use std::thread;
-use FreedomLogger::{init, info, Pattern};
+use FreedomLogger::{log_init, log_info, Pattern};
 
 fn main() {
-    init(Pattern::Basic, "./logs", "threaded_app");
+    log_init(Pattern::Basic, "./logs", "threaded_app");
     
     let handles: Vec<_> = (0..10)
         .map(|i| {
             thread::spawn(move || {
-                info(&format!("Bericht van thread {}", i));
+                log_info(&format!("Bericht van thread {}", i));
             })
         })
         .collect();
@@ -155,11 +155,12 @@ fn main() {
 
 ### Initialisatie Functies
 
-| Functie | Log Niveau | Rotatie | Gebruik |
-|---------|------------|---------|---------|
-| `init()` | Alle niveaus | Standaard (10MB, 5 backups) | Ontwikkeling, testen |
-| `init_with_level()` | Gefilterd | Standaard (10MB, 5 backups) | Productie met filtering |
-| `init_with_rotation()` | Gefilterd | Aangepast | High-volume productie |
+| Functie                       | Log Niveau   | Rotatie                     | Gebruik                 |
+|-------------------------------|--------------|-----------------------------|-------------------------|
+| `log_init()`                  | Alle niveaus | Standaard (10MB, 5 backups) | Ontwikkeling, testen    |
+| `log_init_with_level()`       | Gefilterd    | Standaard (10MB, 5 backups) | Productie met filtering |
+| `log_init_with_rotation()`    | Gefilterd    | Aangepast                   | High-volume productie   |
+| -----------------------------------------------------------------------------------------------------|
 
 ### Log Niveaus (Hiërarchisch)
 

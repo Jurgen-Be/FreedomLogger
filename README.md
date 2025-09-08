@@ -22,16 +22,16 @@ freedom_logger = { git = "https://github.com/Jurgen-Be/FreedomLogger" }
 
 Basic usage:
 ```rust
-use freedom_logger::{init, info, warning, error, Pattern};
+use freedom_logger::{log_init, log_info, log_warning, log_error, Pattern};
 
 fn main() {
     // Initialize logger once
     FreedomLogger::init(Pattern::Basic, "./logs", "myapp");
     
     // Log anywhere in your application
-    info("Application started");
-    warning("This is a warning");
-    error("Something went wrong");
+    log_info("Application started");
+    log_warning("This is a warning");
+    log_error("Something went wrong");
 }
 ```
 
@@ -47,26 +47,26 @@ cargo add FreedomLogger --git https://github.com/Jurgen-Be/FreedomLogger
 
 ### Basic Initialization
 ```rust
-use FreedomLogger::{init, Pattern};
+use FreedomLogger::{log_init, Pattern};
 
 // Logs all levels, 10MB files, 5 backups
-init(Pattern::Basic, "/var/log/myapp", "application");
+log_init(Pattern::Basic, "/var/log/myapp", "application");
 ```
 
 ### With Log Level Filtering
 ```rust
-use FreedomLogger::{init_with_level, Pattern, LogLevel};
+use FreedomLogger::{log_init_with_level, Pattern, LogLevel};
 
 // Only log WARNING and ERROR messages
-init_with_level(Pattern::Detailed, "./logs", "app", LogLevel::Warning);
+log_init_with_level(Pattern::Detailed, "./logs", "app", LogLevel::Warning);
 ```
 
 ### Custom Rotation Settings
 ```rust
-use FreedomLogger::{init_with_rotation, Pattern, LogLevel};
+use FreedomLogger::{log_init_with_rotation, Pattern, LogLevel};
 
 // 50MB files, keep 10 backups
-init_with_rotation(
+log_init_with_rotation(
     Pattern::Json,
     "./logs", 
     "service",
@@ -78,13 +78,13 @@ init_with_rotation(
 
 ### Logging Functions
 ```rust
-use FreedomLogger::{error, warning, info, debug, trace};
+use FreedomLogger::{log_error, log_warning, log_info, log_debug, log_trace};
 
-error("Critical system failure");
-warning("Deprecated API usage detected");  
-info("User authentication successful");
-debug("Processing request payload");
-trace("Entering function calculate_metrics");
+log_error("Critical system failure");
+log_warning("Deprecated API usage detected");  
+log_info("User authentication successful");
+log_debug("Processing request payload");
+log_trace("Entering function calculate_metrics");
 ```
 
 ## Output Patterns
@@ -134,15 +134,15 @@ FreedomLogger is fully thread-safe:
 
 ```rust
 use std::thread;
-use FreedomLogger::{init, info, Pattern};
+use FreedomLogger::{log_init, log_info, Pattern};
 
 fn main() {
-    init(Pattern::Basic, "./logs", "threaded_app");
+    log_init(Pattern::Basic, "./logs", "threaded_app");
     
     let handles: Vec<_> = (0..10)
         .map(|i| {
             thread::spawn(move || {
-                info(&format!("Message from thread {}", i));
+                log_info(&format!("Message from thread {}", i));
             })
         })
         .collect();
@@ -157,11 +157,12 @@ fn main() {
 
 ### Initialization Functions
 
-| Function | Log Level | Rotation | Use Case |
-|----------|-----------|----------|----------|
-| `init()` | All levels | Default (10MB, 5 backups) | Development, testing |
-| `init_with_level()` | Filtered | Default (10MB, 5 backups) | Production with filtering |
-| `init_with_rotation()` | Filtered | Custom | High-volume production |
+| Function                   | Log Level  | Rotation                  | Use Case                  |
+|----------------------------|------------|---------------------------|---------------------------|
+| `log_init()`               | All levels | Default (10MB, 5 backups) | Development, testing      |
+| `log_init_with_level()`    | Filtered   | Default (10MB, 5 backups) | Production with filtering |
+| `log_init_with_rotation()` | Filtered   | Custom                    | High-volume production    |
+|-------------------------------------------------------------------------------------------------|
 
 ### Log Levels (Hierarchical)
 
