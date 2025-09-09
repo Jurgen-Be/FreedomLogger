@@ -5,6 +5,59 @@ All notable changes to FreedomLogger will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-09-09
+
+### Added
+
+#### Enhanced Logging API
+- **Formatted logging macros**: Added `log_error!()`, `log_warning!()`, `log_info!()`, `log_debug!()`, and `log_trace!()` macros
+- **Format string support**: Macros support Rust's standard format strings with automatic type handling
+- **Flexible type support**: Automatically handles types implementing `Display` or `Debug` traits
+- **Backward compatibility**: Original functions (`log_info("message")`) continue to work unchanged
+
+#### New Macro Features
+- **Debug formatting**: Support for `{:?}` formatting for complex types like `PathBuf`, structs, etc.
+- **Multiple arguments**: Support for multiple format arguments: `log_info!("User {} logged in at {}", user_id, timestamp)`
+- **Automatic type conversion**: Uses Rust's built-in `format!` macro for robust type handling
+- **Trailing comma support**: Optional trailing commas in macro arguments for better code formatting
+
+#### Usage Examples
+```rust
+// Original functions (still work)
+log_info("Application started");
+log_debug("Simple debug message");
+
+// New macros with formatting
+log_info!("User {} logged in", username);
+log_debug!("Database path: {:?}", database_path);
+log_error!("Failed to connect to {}: {}", host, error);
+log_warning!("Processing {} items in batch {}", count, batch_id);
+```
+
+### Technical Implementation
+
+#### Macro Design
+- **Dual syntax support**: Each macro supports both simple messages and formatted strings
+- **Zero runtime overhead**: Macros expand to existing function calls with pre-formatted strings
+- **Error-proof compilation**: Leverages Rust's compile-time format string validation
+- **Consistent API**: All log levels have identical macro interfaces
+
+#### Testing
+- **Enhanced test coverage**: Updated integration tests to verify both function and macro approaches
+- **Format validation**: Tests confirm proper handling of various data types and format strings
+- **Backward compatibility testing**: Ensures existing code continues to work without changes
+
+### Fixed
+- **Global logger initialization**: Improved test reliability by handling single global logger instance correctly
+- **Test organization**: Consolidated tests to prevent conflicts from multiple logger initialization attempts
+
+### Developer Experience
+- **No breaking changes**: All existing code continues to work without modification
+- **Progressive enhancement**: Users can gradually adopt new macro syntax where beneficial
+- **Type flexibility**: Solves common issues where users couldn't log complex types without manual formatting
+
+---
+
 ## [1.0.0] - 2025-09-08
 
 ### Added
@@ -106,4 +159,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-*For more information, visit the [FreedomLogger repository](https://github.com/yourusername/FreedomLogger)*
+*For more information, visit the [FreedomLogger repository](https://github.com/Jurgen-Be/FreedomLogger)*

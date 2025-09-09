@@ -1,51 +1,100 @@
-# FreedomLogger
+# FreedomLogger 🦀
 
 Een professionele, thread-veilige logging bibliotheek voor Rust met automatische rotatie, meerdere output formaten en foutbestendige werking.
 
-## Functies
+## ✨ Functies
 
 - **Meerdere log niveaus** met filtering (ERROR, WARNING, INFO, DEBUG, TRACE)
-- **Verschillende output patronen** van basis tot JSON gestructureerde logging
-- **Automatische log rotatie** gebaseerd op configureerbare bestandsgroottelimieten
+- **Flexibele logging API** - Zowel eenvoudige functies als geformatteerde macro's
+- **Verschillende output patronen** van basic tot JSON gestructureerde logging
+- **Automatische log rotatie** gebaseerd op configureerbare bestandsgrootte limieten
 - **Thread-veilige gelijktijdige logging** met interne synchronisatie
-- **Foutbestendige werking** - interne fouten crashen nooit je applicatie
-- **Minimale dependencies** - alleen chrono voor timestamps
-- **Eenvoudige initialisatie** - setup met één functie-aanroep
+- **Foutbestendige werking** - interne fouten laten je applicatie nooit crashen
+- **Minimale afhankelijkheden** - alleen chrono voor timestamps
+- **Eenvoudige initialisatie** - setup met één functie aanroep
 
-## Snel aan de Slag
+## 🚀 Snel Starten
+
+### Installatie
 
 Voeg toe aan je `Cargo.toml`:
 ```toml
 [dependencies]
-freedom_logger 
+freedom_logger = "1.1.0"
 ```
 
-Basis gebruik:
+Of gebruik cargo:
+```bash
+cargo add freedom_logger
+```
+
+### Basis gebruik:
 ```rust
-use FreedomLogger::{log_init, log_info, log_warning, log_error, Pattern};
+use freedom_logger::{log_init, log_info, log_warning, log_error, Pattern};
 
 fn main() {
-    // Logger één keer initialiseren
-    FreedomLogger::init(Pattern::Basic, "./logs", "mijnapp");
+    // Initialiseer logger één keer
+    log_init(Pattern::Basic, "./logs", "mijnapp");
     
-    // Overal in je applicatie loggen
+    // Log overal in je applicatie
     log_info("Applicatie gestart");
     log_warning("Dit is een waarschuwing");
-    log_error("Er ging iets mis");
+    log_error("Er is iets fout gegaan");
 }
 ```
 
-## Installatie
+## 🆕 Nieuw in v1.1.0: Geformatteerde Logging Macro's
 
-```bash
-cargo add FreedomLogger
+FreedomLogger ondersteunt nu zowel eenvoudige functies als krachtige formatterings macro's:
+
+### Eenvoudige Functies (Origineel)
+```rust
+use freedom_logger::{log_error, log_warning, log_info, log_debug, log_trace};
+
+log_error("Kritieke systeemfout");
+log_warning("Verouderde API gebruik gedetecteerd");
+log_info("Gebruiker authenticatie succesvol");
+log_debug("Verwerken van request payload");
+log_trace("Functie calculate_metrics wordt aangeroepen");
 ```
 
-## Gebruik Voorbeelden
-
-### Basis Initialisatie
+### Nieuwe Formatterings Macro's
 ```rust
-use FreedomLogger::{log_init, Pattern};
+use freedom_logger::{log_error, log_warning, log_info, log_debug, log_trace};
+
+// Ondersteuning voor geformatteerde strings met automatische type behandeling
+log_info!("Gebruiker {} succesvol ingelogd", gebruikersnaam);
+log_debug!("Database pad: {:?}", database_pad);  // Werkt met elk Debug type!
+log_error!("Verbinding mislukt naar {}: {}", host, fout_bericht);
+log_warning!("Verwerken van {} items in batch {}", item_aantal, batch_id);
+
+// Complexe types werken automatisch
+let config = MijnConfig { host: "localhost", port: 5432 };
+log_debug!("Server configuratie: {:?}", config);
+
+// Meerdere format specifiers
+log_info!("Gebruiker {} van {} ingelogd om {}", user_id, ip_adres, tijdstempel);
+```
+
+### Waarom de Macro's Gebruiken?
+
+**Voor v1.1.0** (zou compilatie fouten veroorzaken):
+```rust
+let database_pad = PathBuf::from("/var/lib/app.db");
+log_debug("Database pad: {:?}", database_pad); // ❌ Fout!
+```
+
+**Na v1.1.0** (werkt perfect):
+```rust
+let database_pad = PathBuf::from("/var/lib/app.db");
+log_debug!("Database pad: {:?}", database_pad); // ✅ Perfect!
+```
+
+## 📋 Initialisatie Opties
+
+### Basis Setup
+```rust
+use freedom_logger::{log_init, Pattern};
 
 // Logt alle niveaus, 10MB bestanden, 5 backups
 log_init(Pattern::Basic, "/var/log/mijnapp", "applicatie");
@@ -53,86 +102,77 @@ log_init(Pattern::Basic, "/var/log/mijnapp", "applicatie");
 
 ### Met Log Niveau Filtering
 ```rust
-use FreedomLogger::{log_init_with_level, Pattern, LogLevel};
+use freedom_logger::{log_init_with_level, Pattern, LogLevel};
 
 // Log alleen WARNING en ERROR berichten
 log_init_with_level(Pattern::Detailed, "./logs", "app", LogLevel::Warning);
 ```
 
-### Aangepaste Rotatie Instellingen
+### Volledige Configuratie
 ```rust
-use FreedomLogger::{log_init_with_rotation, Pattern, LogLevel};
+use freedom_logger::{log_init_with_rotation, Pattern, LogLevel};
 
 // 50MB bestanden, bewaar 10 backups
 log_init_with_rotation(
     Pattern::Json,
-    "./logs", 
+    "./logs",
     "service",
     LogLevel::Info,
-    50 * 1024 * 1024,  // 50MB
-    10                 // 10 backup bestanden
+    50 * 1024 * 1024, // 50MB
+    10 // 10 backup bestanden
 );
 ```
 
-### Logging Functies
-```rust
-use FreedomLogger::{log_error, log_warning, log_info, log_debug, log_trace};
+## 📝 Output Formaten
 
-log_error("Kritieke systeemfout");
-log_warning("Gebruik van verouderde API gedetecteerd");  
-log_info("Gebruikersauthenticatie succesvol");
-log_debug("Verwerken van request payload");
-log_trace("Functie calculate_metrics betreden");
+### Basic Patroon
+```
+[2025-09-09 14:30:45] INFO: Gebruiker succesvol ingelogd
+[2025-09-09 14:30:46] ERROR: Database verbinding mislukt
 ```
 
-## Output Patronen
-
-### Basis Patroon
+### Gedetailleerd Patroon (met bron locatie)
 ```
-[2025-09-08 14:30:45] INFO: Gebruiker succesvol ingelogd
-[2025-09-08 14:30:46] ERROR: Database verbinding mislukt
+[2025-09-09 14:30:45] [main.rs:42] INFO: Gebruiker succesvol ingelogd
+[2025-09-09 14:30:46] [db.rs:158] ERROR: Database verbinding mislukt
 ```
 
-### Gedetailleerd Patroon
-```
-[2025-09-08 14:30:45] [main.rs:42] INFO: Gebruiker succesvol ingelogd
-[2025-09-08 14:30:46] [db.rs:158] ERROR: Database verbinding mislukt
-```
-
-### JSON Patroon
+### JSON Patroon (gestructureerde logging)
 ```json
-{"timestamp":"2025-09-08 14:30:45","level":"INFO","message":"Gebruiker succesvol ingelogd","file":"main.rs","line":42,"thread":"main"}
-{"timestamp":"2025-09-08 14:30:46","level":"ERROR","message":"Database verbinding mislukt","file":"db.rs","line":158,"thread":"worker-1"}
+{"timestamp":"2025-09-09 14:30:45","level":"INFO","message":"Gebruiker succesvol ingelogd","file":"main.rs","line":42,"thread":"main"}
+{"timestamp":"2025-09-09 14:30:46","level":"ERROR","message":"Database verbinding mislukt","file":"db.rs","line":158,"thread":"worker-1"}
 ```
 
-## Log Rotatie
+## 🔄 Automatische Log Rotatie
 
-FreedomLogger roteert automatisch logbestanden wanneer ze de geconfigureerde grootte overschrijden:
+FreedomLogger roteert automatisch log bestanden wanneer ze de geconfigureerde grootte overschrijden:
 
-- `app.log` (huidige logbestand)
-- `app.1.log` (meest recente backup)
-- `app.2.log` (oudere backup)
-- `app.N.log` (oudste backup, wordt verwijderd wanneer limiet bereikt)
+```
+app.log      (huidig log bestand)
+app.1.log    (meest recente backup)
+app.2.log    (oudere backup)
+app.N.log    (oudste backup, wordt verwijderd bij limiet)
+```
 
-Standaard instellingen: 10MB maximale bestandsgrootte, 5 backup bestanden bewaard.
+**Standaard instellingen:** 10MB max bestandsgrootte, 5 backup bestanden bewaard.
 
-## Foutafhandeling
+## 🛡️ Foutbestendige Werking
 
 FreedomLogger is ontworpen om foutbestendig te zijn:
 
-- **Crasht nooit** - Interne fouten worden netjes afgehandeld
+- **Nooit panic** - Interne fouten worden netjes behandeld
 - **Stille werking** - Logging fouten onderbreken je applicatie niet
-- **Gescheiden error log** - Interne problemen gelogd naar `logger_errors.log`
+- **Apart fout log** - Interne problemen worden gelogd in `logger_errors.log`
 - **Automatische fallbacks** - Ongeldige configuraties gebruiken veilige standaarden
-- **Directory creatie** - Maakt log directories automatisch aan
+- **Directory creatie** - Creëert automatisch log directories
 
-## Thread Veiligheid
+## 🧵 Thread Veiligheid
 
 FreedomLogger is volledig thread-veilig:
 
 ```rust
 use std::thread;
-use FreedomLogger::{log_init, log_info, Pattern};
+use freedom_logger::{log_init, Pattern};
 
 fn main() {
     log_init(Pattern::Basic, "./logs", "threaded_app");
@@ -140,7 +180,9 @@ fn main() {
     let handles: Vec<_> = (0..10)
         .map(|i| {
             thread::spawn(move || {
-                log_info(&format!("Bericht van thread {}", i));
+                // Beide stijlen werken in threads
+                log_info!("Bericht van thread {}", i);
+                log_debug!("Thread {} verwerkt data: {:?}", i, some_data);
             })
         })
         .collect();
@@ -151,26 +193,23 @@ fn main() {
 }
 ```
 
-## Configuratie Opties
+## 📊 Configuratie Snelle Referentie
 
-### Initialisatie Functies
+| Functie | Log Niveau | Rotatie | Gebruik |
+|---------|------------|---------|---------|
+| `log_init()` | Alle niveaus | Standaard (10MB, 5 backups) | Ontwikkeling, testen |
+| `log_init_with_level()` | Gefilterd | Standaard (10MB, 5 backups) | Productie met filtering |
+| `log_init_with_rotation()` | Gefilterd | Aangepast | Hoog-volume productie |
 
-| Functie                       | Log Niveau   | Rotatie                     | Gebruik                 |
-|-------------------------------|--------------|-----------------------------|-------------------------|
-| `log_init()`                  | Alle niveaus | Standaard (10MB, 5 backups) | Ontwikkeling, testen    |
-| `log_init_with_level()`       | Gefilterd    | Standaard (10MB, 5 backups) | Productie met filtering |
-| `log_init_with_rotation()`    | Gefilterd    | Aangepast                   | High-volume productie   |
-| -----------------------------------------------------------------------------------------------------|
+## 📈 Log Niveaus
 
-### Log Niveaus (Hiërarchisch)
-
-- **ERROR** - Kritieke fouten, systeemfouten
+- **ERROR** - Kritieke fouten, systeem fouten
 - **WARNING** - Potentiële problemen, verouderd gebruik
 - **INFO** - Algemene applicatie flow informatie
 - **DEBUG** - Gedetailleerde debugging informatie
 - **TRACE** - Zeer uitgebreide tracing informatie
 
-### Patronen
+## 🎨 Beschikbare Patronen
 
 - **Basic** - Eenvoudig timestamp, niveau, bericht formaat
 - **Detailed** - Inclusief bron bestand en regel nummer
@@ -178,73 +217,72 @@ fn main() {
 - **JSON** - Gestructureerde logging voor analyse tools
 - **Custom** - Gebruiker-gedefinieerde format strings (gepland)
 
-## Bestand Extensies
+## 📁 Bestand Extensies
 
-FreedomLogger gebruikt automatisch de juiste bestandsextensies:
+FreedomLogger gebruikt automatisch de juiste bestand extensies:
+- Tekst patronen (Basic, Detailed, Extended, Custom) → `.log` bestanden
+- JSON patroon → `.json` bestanden
 
-- **Tekst patronen** (Basic, Detailed, Extended, Custom) → `.log` bestanden
-- **JSON patroon** → `.json` bestanden
+## ⚡ Prestaties
 
-## Prestaties
+- **Gebufferde I/O** - Gebruikt `BufWriter` voor optimale schrijf prestaties
+- **Minimale allocaties** - Efficiënte string formattering en geheugen gebruik
+- **Thread synchronisatie** - Mutex-beschermde schrijfbewerkingen voorkomen data corruptie
+- **Lazy initialisatie** - Logger componenten worden alleen gemaakt wanneer nodig
 
-- **Gebufferde I/O** - Gebruikt `BufWriter` voor optimale schrijfprestaties
-- **Minimale allocaties** - Efficiënte string formatting en geheugengebruik
-- **Thread synchronisatie** - Mutex-beschermde schrijfacties voorkomen data corruptie
-- **Lazy initialisatie** - Logger componenten alleen gemaakt wanneer nodig
+## 📚 Voorbeelden
 
-## Voorbeelden
-
-Complete voorbeelden zijn beschikbaar in de `examples/` directory:
+Volledige voorbeelden zijn beschikbaar in de `examples/` directory:
 
 ```bash
 # Basis logging voorbeeld
 cargo run --example basic_usage
 
-# JSON gestructureerde logging
+# JSON gestructureerde logging  
 cargo run --example json_logging
 
-# High-volume logging met rotatie
+# Hoog-volume logging met rotatie
 cargo run --example rotation_demo
+
+# NIEUW: Geformatteerde logging voorbeelden
+cargo run --example formatted_logging
 ```
 
-## Vereisten
+## 📋 Vereisten
 
-- **Rust** 1.70 of later
-- **Dependencies**: chrono (timestamps), tempfile (alleen dev/testing)
+- Rust 1.70 of later
+- Afhankelijkheden: chrono (timestamps), tempfile (dev/testing alleen)
 
-## Bijdragen
+## 🤝 Bijdragen
 
 Bijdragen zijn welkom! Zie [CONTRIBUTING.md](CONTRIBUTING.md) voor richtlijnen.
 
-## Roadmap
+## 🛣️ Roadmap
 
-### Versie 2.0 (Gepland)
+### v2.0.0 (Gepland)
 - Database integratie voor directe log opslag
 - Tijd-gebaseerde rotatie (dagelijks, wekelijks, maandelijks)
-- Async logging voor high-performance applicaties
+- Async logging voor hoge-prestatie applicaties
 - Verbeterde caller locatie tracking
 - Volledige custom patroon parsing
 
-### Versie 1.x (Onderhoud)
+### Doorlopend
 - Bug fixes en prestatie verbeteringen
 - Aanvullende output formaten
 - Uitgebreide platform ondersteuning
 
-## Licentie
+## 📄 Licentie
 
-Gelicenseerd onder:
-- MIT License
+Gelicenseerd onder de **MIT Licentie**.
 
-## Changelog
+Zie [CHANGELOG](CHANGELOG.md) voor gedetailleerde versie geschiedenis.
 
-Zie [CHANGELOG] voor gedetailleerde versie geschiedenis.
-
-## Ondersteuning
+## 🔗 Links
 
 - **Issues**: [GitHub Issues](https://github.com/Jurgen-Be/FreedomLogger/issues)
 - **Discussies**: [GitHub Discussions](https://github.com/Jurgen-Be/FreedomLogger/discussions)
-- **Documentatie**: [docs.rs/FreedomLogger](https://docs.rs/FreedomLogger)
+- **Documentatie**: [docs.rs/freedom_logger](https://docs.rs/freedom_logger)
 
 ---
 
-*Gebouwd met Rust voor prestaties, veiligheid en betrouwbaarheid.*
+**Gebouwd met Rust voor prestaties, veiligheid en betrouwbaarheid.** 🦀

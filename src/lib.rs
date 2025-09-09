@@ -12,13 +12,16 @@
 /// - No external dependencies (except chrono for timestamps)
 /// - Error-proof operation (internal errors logged separately)
 /// - Easy single-initialization API
+/// - Flexible logging macros supporting formatted messages
 ///
 /// Usage:
 /// 1. Initialize logger once in main(): logger::init(pattern, path, filename)
-/// 2. Log anywhere in your code: logger::info("message")
+/// 2. Log anywhere in your code:
+///    - Simple: logger::info("message")
+///    - Formatted: log_info!("User {} logged in", user_id)
 /// 3. All configuration is done at initialization time
 
-use std::sync::{Arc, Mutex, Once};
+use std::sync::{Arc, Once};
 use std::path::Path;
 
 // Import all our modules
@@ -192,11 +195,102 @@ pub fn log_trace(message: &str) {
     get_logger().trace(message);
 }
 
+// ============================================================================
+// MACROS VOOR FORMATTED LOGGING
+// ============================================================================
+
+/// Macro for logging ERROR messages with formatting support
+///
+/// Supports both simple messages and formatted strings with arguments.
+/// Uses Rust's built-in format! macro for automatic type handling.
+///
+
+#[macro_export]
+macro_rules! log_error {
+    // Simple message zonder formatting
+    ($msg:expr) => {
+        $crate::log_error($msg);
+    };
+
+    // Formatted message met argumenten
+    ($fmt:expr, $($arg:expr),+ $(,)?) => {
+        $crate::log_error(&format!($fmt, $($arg),+));
+    };
+}
+
+/// Macro for logging WARNING messages with formatting support
+///
+/// Supports both simple messages and formatted strings with arguments.
+///
+
+/// ```
+#[macro_export]
+macro_rules! log_warning {
+    ($msg:expr) => {
+        $crate::log_warning($msg);
+    };
+
+    ($fmt:expr, $($arg:expr),+ $(,)?) => {
+        $crate::log_warning(&format!($fmt, $($arg),+));
+    };
+}
+
+/// Macro for logging INFO messages with formatting support
+///
+/// Supports both simple messages and formatted strings with arguments.
+///
+
+#[macro_export]
+macro_rules! log_info {
+    ($msg:expr) => {
+        $crate::log_info($msg);
+    };
+
+    ($fmt:expr, $($arg:expr),+ $(,)?) => {
+        $crate::log_info(&format!($fmt, $($arg),+));
+    };
+}
+
+/// Macro for logging DEBUG messages with formatting support
+///
+/// This macro solves the original problem! It supports both simple messages
+/// and formatted strings with arguments, automatically handling any type
+/// that implements Display or Debug.
+///
+
+#[macro_export]
+macro_rules! log_debug {
+    ($msg:expr) => {
+        $crate::log_debug($msg);
+    };
+
+    ($fmt:expr, $($arg:expr),+ $(,)?) => {
+        $crate::log_debug(&format!($fmt, $($arg),+));
+    };
+}
+
+/// Macro for logging TRACE messages with formatting support
+///
+/// Supports both simple messages and formatted strings with arguments.
+///
+
+#[macro_export]
+macro_rules! log_trace {
+    ($msg:expr) => {
+        $crate::log_trace($msg);
+    };
+
+    ($fmt:expr, $($arg:expr),+ $(,)?) => {
+        $crate::log_trace(&format!($fmt, $($arg),+));
+    };
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use tempfile::tempdir;
     use std::fs;
+    use std::path::PathBuf;
 
     #[test]
     fn test_basic_logging_integration() {
@@ -205,10 +299,25 @@ mod tests {
         // Initialize logger
         log_init(Pattern::Basic, temp_dir.path(), "test");
 
-        // Log some messages
+        // Test basic function logging
         log_info("Test info message");
         log_warning("Test warning message");
         log_error("Test error message");
+
+        // Test the new macros with formatting
+        let database_path = PathBuf::from("/var/lib/myapp/database.db");
+        let user_id = 12345;
+        let status = "active";
+
+        // This should now work without any errors!
+        log_debug!("Database path: {:?}", database_path);
+        log_info!("User {} has status: {}", user_id, status);
+        log_warning!("Processing {} items", 42);
+        log_error!("Failed to connect to {}", "localhost:5432");
+
+        // Test simple messages still work
+        log_debug!("Simple debug message");
+        log_info!("Simple info message");
 
         // Check that log file was created
         let log_file = temp_dir.path().join("test.log");
@@ -216,8 +325,17 @@ mod tests {
 
         // Check log content
         let content = fs::read_to_string(&log_file).unwrap();
+
+        // Test basic function messages
         assert!(content.contains("INFO: Test info message"));
         assert!(content.contains("WARNING: Test warning message"));
         assert!(content.contains("ERROR: Test error message"));
+
+        // Test macro messages
+        assert!(content.contains("Database path:"));
+        assert!(content.contains("User 12345 has status: active"));
+        assert!(content.contains("Processing 42 items"));
+        assert!(content.contains("Failed to connect to localhost:5432"));
+        assert!(content.contains("Simple debug message"));
     }
 }
